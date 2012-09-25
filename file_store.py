@@ -3,19 +3,18 @@ import io
 
 __author__ = 'chaynes'
 
-class DuplicateEntry(BaseException):
-    pass
-
-
 class FileStore(object):
-    def __init__(self, hasher=hashlib.md5):
+    def __init__(self, on_duplicate, hasher=hashlib.md5):
+        self.on_duplicate = on_duplicate
         self.hasher = hasher
         self.hash_set = set()
 
     def Add(self, name):
-        if self.Hash(name) in self.hash_set:
-            raise DuplicateEntry
-        self.hash_set.add(self.Hash(name))
+        file_hash = self.Hash(name)
+        if file_hash in self.hash_set:
+            self.on_duplicate(name)
+        else:
+            self.hash_set.add(file_hash)
 
     def Hash(self, name):
         f = io.open(name, 'rb')

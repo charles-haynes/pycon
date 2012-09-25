@@ -14,18 +14,19 @@ import unittest
 class FileDictionaryTests(unittest.TestCase):
     def setUp(self):
         self.hasher = Mock(return_value=TEST_DIGEST)
-        self.file_dictionary = file_store.FileStore(self.hasher)
+        self.on_duplicate = Mock()
+        self.file_dictionary = file_store.FileStore(self.on_duplicate, self.hasher)
 
     def test_can_add_file(self):
         self.file_dictionary.Add(TEST_FILE_NAME)
 
-        self.assertTrue(self.hasher.called)
+        self.assertEqual(1, self.hasher.call_count)
 
-    def test_adding_duplicate_key_raises_error(self):
+    def test_adding_duplicate_key_calls_on_duplicate(self):
         self.file_dictionary.Add(TEST_FILE_NAME)
+        self.file_dictionary.Add(TEST_FILE_NAME2)
 
-        with self.assertRaises(file_store.DuplicateEntry):
-            self.file_dictionary.Add(TEST_FILE_NAME2)
+        self.on_duplicate.assert_called_once_with(TEST_FILE_NAME2)
 
     def test_adding_duplicate_digest_creates_duplicate_value(self):
         self.file_dictionary.Add(TEST_FILE_NAME)
