@@ -1,9 +1,10 @@
-import file_dictionary
+import file_store
 from mock import Mock, patch
 
 TEST_FILE_NAME = 'test_file_name'
 TEST_FILE_NAME2 = 'test_file_name_2'
 TEST_DIGEST = 12345
+TEST_DIGEST2 = 123456
 
 __author__ = 'chaynes'
 
@@ -12,28 +13,27 @@ import unittest
 @patch('io.open', Mock())
 class FileDictionaryTests(unittest.TestCase):
     def setUp(self):
-        self.file_dictionary = file_dictionary.FileDictionary()
+        self.hasher = Mock(return_value=TEST_DIGEST)
+        self.file_dictionary = file_store.FileStore(self.hasher)
 
-    @patch('hashlib.md5')
-    def test_can_add_file(self, mock_digest):
+    def test_can_add_file(self):
         self.file_dictionary.Add(TEST_FILE_NAME)
 
-        self.assertTrue(mock_digest.called)
+        self.assertTrue(self.hasher.called)
 
-    @patch('hashlib.md5', Mock())
     def test_adding_duplicate_key_raises_error(self):
         self.file_dictionary.Add(TEST_FILE_NAME)
 
-        with self.assertRaises(file_dictionary.DuplicateEntry):
-            self.file_dictionary.Add(TEST_FILE_NAME)
+        with self.assertRaises(file_store.DuplicateEntry):
+            self.file_dictionary.Add(TEST_FILE_NAME2)
 
-    @patch('hashlib.md5', Mock(return_value=TEST_DIGEST))
     def test_adding_duplicate_digest_creates_duplicate_value(self):
         self.file_dictionary.Add(TEST_FILE_NAME)
+        self.hasher.return_value = TEST_DIGEST2
         self.file_dictionary.Add(TEST_FILE_NAME2)
 
-        test_dict = {TEST_FILE_NAME: TEST_DIGEST, TEST_FILE_NAME2: TEST_DIGEST}
-        self.assertDictEqual(test_dict, self.file_dictionary.Dict())
+        test_hashes = {TEST_DIGEST, TEST_DIGEST2}
+        self.assertSetEqual(test_hashes, self.file_dictionary.Hashes())
 
 if __name__ == '__main__':
     unittest.main()

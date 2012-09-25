@@ -1,11 +1,11 @@
-import file_dictionary
+import file_store
 import os
 import sys
 
 __author__ = 'chaynes'
 
 def find_duplicates(root_dir):
-    file_dict = file_dictionary.FileDictionary()
+    file_dict = file_store.FileStore()
     for dir_path, dir_list, file_list in os.walk(root_dir):
         for filename in file_list:
             file_dict.Add(os.path.join(dir_path, filename))
