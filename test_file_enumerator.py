@@ -6,7 +6,7 @@ from mock import Mock, patch
 
 walk_return = [('root_dir', ['a', ], ['b', ]), ('root_dir/a', [], ['c', 'd']), ]
 
-class MyTestCase(unittest.TestCase):
+class FileEnumeratorTests(unittest.TestCase):
     @patch('os.path.join', Mock(side_effect=(lambda x, y: x + '/' + y)))
     @patch('os.walk', Mock(return_value=walk_return))
     def test_file_enumerator_recursively_lists_all_files_in_dir(self):
