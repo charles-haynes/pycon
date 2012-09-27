@@ -1,7 +1,7 @@
 import hashlib
 import io
 import struct
-import mutagen.id3
+from mutagen.id3 import BitPaddedInt
 
 __author__ = 'chaynes'
 
@@ -19,7 +19,7 @@ def get_start_end(f):
         idata = f.read(10)
         try:
             id3, insize = struct.unpack('>3sxxx4s', idata)
-            insize = mutagen.id3.BitPaddedInt(insize)
+            insize = BitPaddedInt(insize)
             if id3 == 'ID3' and 0 <= insize <= end - 10:
                 start = insize + 10
         except struct.error:
