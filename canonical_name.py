@@ -28,6 +28,5 @@ class CanonicalName(object):
         except (KeyError, AttributeError):
             pass
 
-        return os.path.join(grandparent_dir_format.format(**fields),
-            dir_format.format(**fields),
-            file_format.format(**fields))
+        return os.path.join(
+            grandparent_dir_format, dir_format, file_format).format(**fields)
