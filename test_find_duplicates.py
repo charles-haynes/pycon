@@ -5,15 +5,8 @@ __author__ = 'chaynes'
 
 import unittest
 
-@patch('os.path.join', Mock(side_effect=(lambda x, y: x + '/' + y)))
+@patch('file_enumerator.files', Mock(return_value=['root_dir/b', 'root_dir/a/c', 'root_dir/a/d']))
 class MyTestCase(unittest.TestCase):
-    def setUp(self):
-        walk_return = [('root_dir', ['a', ], ['b', ]), ('root_dir/a', [], ['c', 'd']), ]
-
-        walk_patcher = patch('os.walk', Mock(return_value=walk_return))
-        walk_patcher.start()
-        self.addCleanup(walk_patcher.stop)
-
     def test_find_duplicates_recursively_adds_all_files_in_dir(self):
         with patch('file_store.FileStore.Add') as mock_add:
             find_duplicates.main('root_dir')
