@@ -1,5 +1,5 @@
 import file_store
-from mock import Mock, patch
+from mock import MagicMock, Mock, patch
 
 TEST_FILE_NAME = 'test_file_name'
 TEST_FILE_NAME2 = 'test_file_name_2'
@@ -10,7 +10,7 @@ __author__ = 'chaynes'
 
 import unittest
 
-@patch('io.open', Mock())
+@patch('io.open', MagicMock())
 class FileDictionaryTests(unittest.TestCase):
     def setUp(self):
         self.hasher = Mock(return_value=TEST_DIGEST)
