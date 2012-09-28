@@ -28,7 +28,7 @@ class FileStoreTests(unittest.TestCase):
 
         self.on_duplicate.assert_called_once_with(TEST_FILE_NAME2)
 
-    def test_adding_duplicate_digest_creates_duplicate_value(self):
+    def test_adding_new_hash_creates_new_entry(self):
         self.file_store.Add(TEST_FILE_NAME)
         self.hasher.return_value = TEST_DIGEST2
         self.file_store.Add(TEST_FILE_NAME2)
