@@ -16,36 +16,6 @@ MP3_FILE_ID3_TRAILER = MP3_FILE_NO_ID3 + ID3_TRAILER
 MP3_FILE_ID3_HEADER_AND_TRAILER = ID3_HEADER + MP3_FILE_NO_ID3 + ID3_TRAILER
 
 class Mp3FileTest(unittest.TestCase):
-    def test_start_of_file_with_no_header_is_zero(self):
-        file = io.BytesIO(MP3_FILE_NO_ID3)
-        mp3 = mp3_file.Mp3File(file)
-        self.assertEqual(0, mp3.start)
-
-    def test_start_of_file_with_id3_header_is_11(self):
-        file = io.BytesIO(MP3_FILE_ID3_HEADER)
-        mp3 = mp3_file.Mp3File(file)
-        self.assertEqual(len(ID3_HEADER), mp3.start)
-
-    def test_start_of_file_with_id3_header_and_trailer_is_11(self):
-        file = io.BytesIO(MP3_FILE_ID3_HEADER_AND_TRAILER)
-        mp3 = mp3_file.Mp3File(file)
-        self.assertEqual(len(ID3_HEADER), mp3.start)
-
-    def test_end_of_file_with_no_header_is_205(self):
-        file = io.BytesIO(MP3_FILE_NO_ID3)
-        mp3 = mp3_file.Mp3File(file)
-        self.assertEqual(len(MP3_FILE_NO_ID3), mp3.end)
-
-    def test_end_of_file_with_id3_trailer_is_205(self):
-        file = io.BytesIO(MP3_FILE_ID3_TRAILER)
-        mp3 = mp3_file.Mp3File(file)
-        self.assertEqual(len(MP3_FILE_NO_ID3), mp3.end)
-
-    def test_end_of_file_with_id3_header_and_trailer_is_216(self):
-        file = io.BytesIO(MP3_FILE_ID3_HEADER_AND_TRAILER)
-        mp3 = mp3_file.Mp3File(file)
-        self.assertEqual(len(MP3_FILE_NO_ID3) + len(ID3_HEADER), mp3.end)
-
     def test_data_empty(self):
         file = io.BytesIO(MP3_FILE_EMPTY)
         mp3 = mp3_file.Mp3File(file)
